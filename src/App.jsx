@@ -8,6 +8,7 @@ import Any from './Components/Any/Any'
 import Footer from './Components/Footer/Footer'
 import Form from './Components/Form/Form'
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import ProductList from './Components/Products/ProductList'
 import { animateScroll as scroll } from 'react-scroll';
 import { Element } from 'react-scroll';

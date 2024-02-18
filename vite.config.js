@@ -7,8 +7,7 @@ export default defineConfig({
   build: {
     // Specify the entry file (e.g., src/main.js or src/main.ts)
     rollupOptions: {
-      input: "src/main.jsx",
-      ssr: "./src/ssr-entry.js",
+      external: ['bootstrap'],
     },
   },
   plugins: [
