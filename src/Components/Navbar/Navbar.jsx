@@ -59,7 +59,7 @@ const Navbar = ({ navigateTo }) => {
     <div className="navBar flex">
       <div className="navBarOne flex">
         <div>
-          <img className="logos" src={"./images/drdo_logo_.png"} alt="drdo" />
+          <img className="logos" src={"/images/drdo_logo_ (1).png"} alt="drdo" />
         </div>
 
         <div className="atb flex">

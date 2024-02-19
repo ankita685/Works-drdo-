@@ -44,7 +44,7 @@
 //default styling../
 body{
     background: var(--SecondaryColor);
-    background-image: url('./images/bg.jpg');
+    // background-image: url('./dist/images/bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -585,7 +585,7 @@ font-weight: bold;
                     bottom: 1rem;
                     width: 100px;
                     height: max-content;
-                    background: var(--whiteColor);
+                    // background: var(--whiteColor);
                     padding: 0rem 4.5rem;
                     transition: var(--transition);
                     animation: animatedBorders 2.3 infinite;

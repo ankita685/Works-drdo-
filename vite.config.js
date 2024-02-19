@@ -8,7 +8,16 @@ export default defineConfig({
     // Specify the entry file (e.g., src/main.js or src/main.ts)
     rollupOptions: {
       external: ['bootstrap'],
+      output: {
+        manualChunks: {
+         
+        },
+      },
     },
+    chunkSizeWarningLimit: 1000,
+      
+    
+  
   },
   plugins: [
     [ReactRefresh()],

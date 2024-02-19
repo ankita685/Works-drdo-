@@ -12,7 +12,7 @@ const Any = () => {
   <p>To insure action on the Minor/ Revenue works request of the user within 30 working day of request.</p>
   <div className='travelersContainer grid'>
     <div className='singleTraveler'>
-      <img src="./images/p7.jpg" alt="" />
+      <img src="/images/p7.jpg" alt="" />
       <div className='travelerDetails'>
         <div className='travelerPicture'>
         {/* <img src="./images/p4.jpg" alt="" /> */}
@@ -27,7 +27,7 @@ const Any = () => {
 
 
     <div className='singleTraveler'>
-      <img src="./images/p4.jpg" alt="" />
+      <img src="/images/p4.jpg" alt="" />
       <div className='travelerDetails'>
         <div className='travelerPicture'>
         {/* <img src="./images/p4.jpg" alt="" /> */}
@@ -42,7 +42,7 @@ const Any = () => {
 
 
     <div className='singleTraveler'>
-      <img src="./images/p6.jpg" alt="" />
+      <img src="/images/p6.jpg" alt="" />
       <div className='travelerDetails'>
         <div className='travelerPicture'>
         {/* <img src="./images/p4.jpg" alt="" /> */}

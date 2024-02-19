@@ -27,7 +27,6 @@
 
 body {
   background: var(--SecondaryColor);
-  background-image: url("./images/bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -447,7 +446,6 @@ h2 {
   width: 100px;
   height: -moz-max-content;
   height: max-content;
-  background: var(--whiteColor);
   padding: 0rem 4.5rem;
   transition: var(--transition);
   animation: animatedBorders 2.3 infinite;

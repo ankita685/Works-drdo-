@@ -31,10 +31,10 @@ Provides state-of-the-art diagnostics facilities for test and evaluation of arma
               </div>
             </div>
             <div className='imgDiv'>
-              <img  className='img1'src ="./images/p4.jpg" alt =""/>
-              <img  className='img1'src ="./images/p6.jpg" alt =""/>
-              <img  className='img1'src ="./images/p7.jpg" alt =""/>
-              <img  className='img1'src ="./images/p2.jpg" alt =""/>
+              <img  className='img1'src ="/images/p4.jpg" alt =""/>
+              <img  className='img1'src ="/images/p6.jpg" alt =""/>
+              <img  className='img1'src ="/images/p7.jpg" alt =""/>
+              <img  className='img1'src ="/images/p2 (1).jpg" alt =""/>
 
 
 
