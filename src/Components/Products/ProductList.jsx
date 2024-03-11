@@ -26,9 +26,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { remove } from 'firebase/database';
 import { generateAndDownloadExcel } from '../ExcelExportUtils';
-
-
-
+import { CheckBox } from '@mui/icons-material';
 
 
 const database = getDatabase(firebaseApp);
@@ -50,6 +48,22 @@ export default function ProductList() {
       [id]: !prevStatus[id],
     }));
   };
+ 
+
+  // Load completedStatus from localStorage on component mount
+  useEffect(() => {
+    const storedCompletedStatus = localStorage.getItem('completedStatus');
+    if (storedCompletedStatus) {
+      setCompletedStatus(JSON.parse(storedCompletedStatus));
+    }
+  }, []);
+
+  // Save completedStatus to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('completedStatus', JSON.stringify(completedStatus));
+  }, [completedStatus]);
+
+ 
 
   useEffect(() => {
     const dataRef = ref(database, '/UserData');
@@ -249,8 +263,9 @@ export default function ProductList() {
                           </Stack>
                         </TableCell>
                         <TableCell align="left" style={{ color: completedStatus[row.id] ? 'green' : 'red' }}>
-  {completedStatus[row.id] ? 'Complete' : 'Pending!'}
-</TableCell>
+      {completedStatus[row.id] ? 'Complete' : 'Pending!'}
+    
+    </TableCell>
 
                 </TableRow>
               ))}

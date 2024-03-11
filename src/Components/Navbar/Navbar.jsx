@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { BsPhoneVibrate } from "react-icons/bs";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { Link } from "react-scroll";
@@ -43,10 +44,33 @@ const Navbar = ({ navigateTo }) => {
     setActive("navBarMenu");
   };
 
-  const toggleAboutMenu = () => {
+  // const toggleAboutMenu = () => {
+  //   setAboutMenuVisible(!aboutMenuVisible);
+  // };
+
+  const toggleAboutMenu = (event) => {
+    // Prevent the click event from propagating to the document
+    event.stopPropagation();
     setAboutMenuVisible(!aboutMenuVisible);
   };
 
+  const closeAboutMenu = (event) => {
+    // Stop the event propagation to prevent immediate closing
+    event.stopPropagation();
+    
+    // Check if the click target is not inside the submenu
+    if (!event.target.closest(".submenu-box")) {
+      setAboutMenuVisible(false);
+    }
+  };
+  
+  useEffect(() => {
+    document.addEventListener("click", closeAboutMenu);
+  
+    return () => {
+      document.removeEventListener("click", closeAboutMenu);
+    };
+  }, []);
   const scrollToForm = () => {
     // Scroll to the 'form' section with smooth animation
     scroll.scrollTo("form", {
@@ -122,9 +146,22 @@ const Navbar = ({ navigateTo }) => {
       </div>
 
       {aboutMenuVisible && <SubMenuBox />}
+    
+
      
       </div>
   );
 };
 
 export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
