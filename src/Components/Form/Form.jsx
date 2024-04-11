@@ -88,7 +88,7 @@ const Form = () => {
           <input
             type="text"
             name="Name"
-            placeholder={t("Building Number")}
+            placeholder={t("Building Number(Zone)")}
             value={user.Name}
             autoComplete="off"
             required

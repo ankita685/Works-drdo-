@@ -142,6 +142,53 @@ h2 {
   color: white;
 }
 
+.feedback-form-container {
+  max-width: 400px;
+  margin: 70px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.feedback-form-container .form-group {
+  margin-bottom: 20px;
+}
+.feedback-form-container label {
+  font-weight: bold;
+}
+.feedback-form-container input[type=text],
+.feedback-form-container textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.feedback-form-container textarea {
+  resize: vertical;
+}
+.feedback-form-container button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.feedback-form-container button[type=submit] {
+  margin-right: 10px;
+}
+.feedback-form-container button[type=button] {
+  background-color: #dc3545;
+}
+.feedback-form-container button:hover {
+  background-color: #0056b3;
+}
+.feedback-form-container button[type=button]:hover {
+  background-color: #c82333;
+}
+
 .navBar {
   position: fixed;
   top: 0;
@@ -243,29 +290,32 @@ h2 {
 }
 
 .home {
-  padding-top: 12rem;
-  text-align: center;
-  gap: 1rem;
+  padding-top: 6rem;
+  display: flex;
   flex-direction: column;
-  background-size: cover;
-}
-.home .mainText {
-  color: var(--blackColor);
-  font-weight: 700;
-  font-size: 23px;
-  line-height: 2.5rem;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-  background-color: #dcdcdc;
-  border: 3px solid #dcdcdc;
-  font-family: "Times New Roman", Times, serif;
-}
-.home .img1 {
-  width: 100%;
-  margin: 1rem auto 0;
-  justify-content: center;
   align-items: center;
-  position: relative;
-  border-radius: 1.5rem;
+  text-align: center;
+}
+
+.mainText {
+  background-color: var(--blackColor);
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.mainText h1 {
+  color: antiquewhite;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.img1 {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .support .sectionContainer .titlesDiv {
@@ -353,6 +403,17 @@ h2 {
 .infos .infoContainers .cardsDiv .singleCard .cardTitle {
   color: var(--blackColor);
   font-weight: 700;
+}
+
+.detailsContainer {
+  margin-top: 20px;
+}
+
+.box {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 5px;
 }
 
 .lounge .sectionContainer {

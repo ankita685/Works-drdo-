@@ -3,6 +3,7 @@ import React, { useState,useEffect } from "react";
 import { BsPhoneVibrate } from "react-icons/bs";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { Link } from "react-scroll";
+import FeedbackForm from "../FeedbackForm";
 // Import the necessary components from react-router-dom
 
 import { CgMenuGridO } from "react-icons/cg";
@@ -36,6 +37,15 @@ const SubMenuBox = () => {
 const Navbar = ({ navigateTo }) => {
   const [active, setActive] = useState("navBarMenu");
   const [aboutMenuVisible, setAboutMenuVisible] = useState(false);
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
+
+  const showFeedback = () => {
+    setFeedbackVisible(true);
+  };
+
+  const hideFeedback = () => {
+    setFeedbackVisible(false);
+  };
 
   const showNavBar = () => {
     setActive("navBarMenu showNavBar");
@@ -87,10 +97,10 @@ const Navbar = ({ navigateTo }) => {
         </div>
 
         <div className="atb flex">
-          <span>
-            <BsPhoneVibrate className="icon" />
-            Support
-          </span>
+        <span onClick={showFeedback}>
+  <BsPhoneVibrate className="icon" />
+  Feedback
+</span>
           <span>
             <AiOutlineGlobal className="icon" />
             Languages
@@ -146,7 +156,9 @@ const Navbar = ({ navigateTo }) => {
       </div>
 
       {aboutMenuVisible && <SubMenuBox />}
-    
+      {feedbackVisible && (
+        <FeedbackForm handleClose={hideFeedback} />
+      )}
 
      
       </div>

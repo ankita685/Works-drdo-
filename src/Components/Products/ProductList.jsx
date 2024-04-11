@@ -1,33 +1,30 @@
-
-
-
-
-import React, { useState, useEffect } from 'react';
-import { getDatabase, ref, onValue } from 'firebase/database';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import React, { useState, useEffect } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { firebaseApp } from '../../firebase-config';
+import { firebaseApp } from "../../firebase-config";
 import Stack from "@mui/material/Stack";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
-
+import { saveAs } from "file-saver";
 import TextField from "@mui/material/TextField";
-import { remove } from 'firebase/database';
-import { generateAndDownloadExcel } from '../ExcelExportUtils';
-import { CheckBox } from '@mui/icons-material';
-
+import { remove } from "firebase/database";
+import { generateAndDownloadExcel } from "../ExcelExportUtils";
+import { generateAndDownloadWordDocument } from "../WordDocumentGenerator";
+// import { generateWordDocumentFromExcel } from '../WordDocumentGenerator';
+import { CheckBox } from "@mui/icons-material";
 
 const database = getDatabase(firebaseApp);
 
@@ -37,42 +34,21 @@ export default function ProductList() {
   const [rows, setRows] = useState([]);
   const [completedStatus, setCompletedStatus] = useState({});
 
-  const handleExportToExcel = () => {
-    // Call the utility function to generate and download Excel when clicking the button
-    generateAndDownloadExcel(rows);
-  };
-  const handleChangeStatus = (id) => {
-    // Toggle the completion status for the specified id
-    setCompletedStatus((prevStatus) => ({
-      ...prevStatus,
-      [id]: !prevStatus[id],
-    }));
-  };
- 
 
-  // Load completedStatus from localStorage on component mount
-  useEffect(() => {
-    const storedCompletedStatus = localStorage.getItem('completedStatus');
-    if (storedCompletedStatus) {
-      setCompletedStatus(JSON.parse(storedCompletedStatus));
-    }
-  }, []);
-
-  // Save completedStatus to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('completedStatus', JSON.stringify(completedStatus));
-  }, [completedStatus]);
-
+  
  
 
   useEffect(() => {
-    const dataRef = ref(database, '/UserData');
+    const dataRef = ref(database, "/UserData");
 
     const onDataChange = (snapshot) => {
       const data = snapshot.val();
 
       if (data) {
-        const dataArray = Object.entries(data).map(([key, value]) => ({ id: key, ...value }));
+        const dataArray = Object.entries(data).map(([key, value]) => ({
+          id: key,
+          ...value,
+        }));
         setRows(dataArray);
       } else {
         setRows([]);
@@ -85,6 +61,62 @@ export default function ProductList() {
       onValue(dataRef, onDataChange);
     };
   }, []);
+  
+
+  const handleExportToExcel = () => {
+    if (rows.length > 0 ) {
+    // Call the utility function to generate and download Excel when clicking the button
+    generateAndDownloadExcel(rows);}
+    else {
+      Swal.fire("Error", "No data available for download", "error");
+    }
+  };
+ 
+
+  
+  const handleDownload = () => {
+    const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0];
+    if (rows.length > 0 ) { // Check if rows is not empty and the first row has the 'details' property
+      let serialCounter = 1; // Initialize the counter outside the loop
+
+      // Inside the loop where you generate the data
+      const data = {
+        DATE: formattedDate,
+        TOPIC: rows[0].details,
+        CAT: rows[0].category,
+        ZONE: rows[0].Name,
+        SERIAL: String(serialCounter).padStart(5, '0') // Convert counter to 5-digit string
+      };
+      
+      serialCounter++;
+  
+      generateAndDownloadWordDocument(data);
+    } else {
+      Swal.fire("Error", "No data available for download", "error");
+    }
+  };
+
+  const handleChangeStatus = (id) => {
+    // Toggle the completion status for the specified id
+    setCompletedStatus((prevStatus) => ({
+      ...prevStatus,
+      [id]: !prevStatus[id],
+    }));
+  };
+
+  // Load completedStatus from localStorage on component mount
+  useEffect(() => {
+    const storedCompletedStatus = localStorage.getItem("completedStatus");
+    if (storedCompletedStatus) {
+      setCompletedStatus(JSON.parse(storedCompletedStatus));
+    }
+  }, []);
+
+  // Save completedStatus to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("completedStatus", JSON.stringify(completedStatus));
+  }, [completedStatus]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,25 +140,25 @@ export default function ProductList() {
         deleteApi(id);
       }
     });
-  }
-
-
-
+  };
 
   const deleteApi = async (id) => {
-    const userRef = ref(database, 'UserData/' + id);
-  
+    const userRef = ref(database, "UserData/" + id);
+
     try {
       await remove(userRef);
       Swal.fire("Deleted!", "Your file has been deleted.", "success");
-  
+
       // Assuming you want to refresh the data after deleting
-      const newDataRef = ref(database, '/UserData');
+      const newDataRef = ref(database, "/UserData");
       onValue(newDataRef, (snapshot) => {
         const newData = snapshot.val();
-  
+
         if (newData) {
-          const newDataArray = Object.entries(newData).map(([key, value]) => ({ id: key, ...value }));
+          const newDataArray = Object.entries(newData).map(([key, value]) => ({
+            id: key,
+            ...value,
+          }));
           setRows(newDataArray);
         } else {
           setRows([]);
@@ -134,91 +166,96 @@ export default function ProductList() {
       });
     } catch (error) {
       console.error("Error deleting document: ", error);
-      Swal.fire("Error", "An error occurred while deleting the document.", "error");
+      Swal.fire(
+        "Error",
+        "An error occurred while deleting the document.",
+        "error"
+      );
     }
   };
-  
- 
 
   const filterData = (selectedCategory) => {
     if (selectedCategory) {
-      const filteredRows = rows.filter((row) => row.category === selectedCategory);
+      const filteredRows = rows.filter(
+        (row) => row.category === selectedCategory
+      );
       setRows(filteredRows);
     } else {
       getUsers();
     }
   };
-  
 
   const headingStyle = {
-    color: '#333',
-    textAlign: 'center',
-    fontFamily: 'Arial, sans-serif',
+    color: "#333",
+    textAlign: "center",
+    fontFamily: "Arial, sans-serif",
   };
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <Typography
         gutterBottom
         variant="h5"
         component="div"
-        sx={{ padding: '30px' }}
+        sx={{ padding: "30px" }}
       >
         <h2 style={headingStyle}>Complaints List</h2>
       </Typography>
-      <Divider/>
+      <Divider />
       <Box height={10} />
-          <Stack direction="row" spacing={2} className="my-2 mb-2">
-            
-          <Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={rows}
-  sx={{ width: 300 }}
-  onChange={(e, v) => filterData(v?.category || "")}
-  getOptionLabel={(row) => row.category || ""}
-  renderInput={(params) => (
-    <TextField {...params} size="small" label="Search Complaints" />
-  )}
-/>
+      <Stack direction="row" spacing={2} className="my-2 mb-2">
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={rows}
+          sx={{ width: 300 }}
+          onChange={(e, v) => filterData(v?.category || "")}
+          getOptionLabel={(row) => row.category || ""}
+          renderInput={(params) => (
+            <TextField {...params} size="small" label="Search Complaints" />
+          )}
+        />
 
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1 }}
-            ></Typography>
-           
-           <Button variant="contained" onClick={handleExportToExcel}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1 }}
+        ></Typography>
+
+        <Button variant="contained" onClick={handleExportToExcel}>
           Export to Excel
         </Button>
-          </Stack>
-            <TableContainer sx={{ maxHeight: 440 }}>
+        <Button variant="contained" onClick={handleDownload}>
+  Download Word Document
+</Button>
+
+      </Stack>
+      <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Building Number
               </TableCell>
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Contact Number
               </TableCell>
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Location
               </TableCell>
-              
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Details
               </TableCell>
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Category
               </TableCell>
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Action
               </TableCell>
-              <TableCell align="left" style={{ minWidth: '100px' }}>
+              <TableCell align="left" style={{ minWidth: "100px" }}>
                 Status
               </TableCell>
-             
             </TableRow>
           </TableHead>
           <TableBody>
@@ -234,8 +271,8 @@ export default function ProductList() {
                   <TableCell align="left">{row.category}</TableCell>
 
                   <TableCell align="left">
-                          <Stack spacing={2} direction="row">
-                            {/* <EditIcon
+                    <Stack spacing={2} direction="row">
+                      {/* <EditIcon
                               style={{
                                 fontSize: "20px",
                                 color: "blue",
@@ -245,28 +282,29 @@ export default function ProductList() {
                               onClick={() => editUser(row.id)}
                             /> */}
 
-<input
-                  type="checkbox"
-                  checked={completedStatus[row.id]}
-                  onChange={() => handleChangeStatus(row.id)}
-                />
-                            <DeleteIcon
-                              style={{
-                                fontSize: "20px",
-                                color: "darkred",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                deleteUser(row.id);
-                              }}
-                            />
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left" style={{ color: completedStatus[row.id] ? 'green' : 'red' }}>
-      {completedStatus[row.id] ? 'Complete' : 'Pending!'}
-    
-    </TableCell>
-
+                      <input
+                        type="checkbox"
+                        checked={completedStatus[row.id]}
+                        onChange={() => handleChangeStatus(row.id)}
+                      />
+                      <DeleteIcon
+                        style={{
+                          fontSize: "20px",
+                          color: "darkred",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          deleteUser(row.id);
+                        }}
+                      />
+                    </Stack>
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{ color: completedStatus[row.id] ? "green" : "red" }}
+                  >
+                    {completedStatus[row.id] ? "Complete" : "Pending!"}
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

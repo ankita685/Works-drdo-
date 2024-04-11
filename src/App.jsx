@@ -27,7 +27,7 @@ const App = () => {
   console.log('Current Page:', currentPage);
   return (
    
-    <div >
+    <div>
     
       <Navbar navigateTo={navigateTo}/>
       <hr />
