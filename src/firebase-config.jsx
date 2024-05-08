@@ -5,7 +5,13 @@ import { getAnalytics } from "firebase/analytics";
 import { useState, useEffect } from 'react';
 
 import 'firebase/database';
-import { getDatabase, ref, onValue } from 'firebase/database';
+// import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue } from "firebase/database";
+
+
+
+// Reference to the desired data in the Firebase Realtime Database
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,6 +31,10 @@ const firebaseConfig = {
 
 
 const firebaseApp = initializeApp(firebaseConfig);
+
 const database = getDatabase(firebaseApp);
+// firebase.database().goOffline();
+// database.goOffline();
+// database.goOffline();
 
 export { firebaseApp, database };

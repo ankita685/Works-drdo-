@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import Paper from "@mui/material/Paper";
@@ -24,6 +35,7 @@ import { remove } from "firebase/database";
 import { generateAndDownloadExcel } from "../ExcelExportUtils";
 import { generateAndDownloadWordDocument } from "../WordDocumentGenerator";
 // import { generateWordDocumentFromExcel } from '../WordDocumentGenerator';
+import { openDB } from "idb";
 import { CheckBox } from "@mui/icons-material";
 
 const database = getDatabase(firebaseApp);
@@ -34,8 +46,59 @@ export default function ProductList() {
   const [rows, setRows] = useState([]);
   const [completedStatus, setCompletedStatus] = useState({});
 
+  const [offlineData, setOfflineData] = useState([]);
 
+  // useEffect(() => {
+  //   const fetchDataFromIndexedDB = async () => {
+  //     try {
+  //       // Open the IndexedDB database
+  //       const db = await openDB("form-db", 1);
+
+  //       // Access the object store
+  //       const transaction = db.transaction("formData", "readonly");
+  //       const store = transaction.objectStore("formData");
+
+  //       // Retrieve all data from the object store
+  //       const data = await store.getAll();
+
+  //       // Update the component state with the fetched data
+  //       setOfflineData(data);
+  //     } catch (error) {
+  //       console.error("Error fetching data from IndexedDB:", error);
+  //     }
+  //   };
+
+  //   // Call the function when the component mounts
+  //   fetchDataFromIndexedDB();
+  // }, []);
   
+
+  useEffect(() => {
+    const fetchDataFromIndexedDB = async () => {
+      try {
+        // Open the IndexedDB database
+        const db = await openDB("form-db", 1);
+
+        // Access the object store
+        const transaction = db.transaction("formData", "readonly");
+        const store = transaction.objectStore("formData");
+
+        // Retrieve all data from the object store
+        const data = await store.getAll();
+
+        // Update the component state with the fetched data
+        setRows(data);
+      } catch (error) {
+        console.error("Error fetching data from IndexedDB:", error);
+      }
+    };
+
+    // Check if the user is offline
+    if (!navigator.onLine) {
+      // Call the function to fetch data from IndexedDB when offline
+      fetchDataFromIndexedDB();
+    }
+  }, []);
  
 
   useEffect(() => {
