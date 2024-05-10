@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import Paper from "@mui/material/Paper";
@@ -34,7 +23,10 @@ import TextField from "@mui/material/TextField";
 import { remove } from "firebase/database";
 import { generateAndDownloadExcel } from "../ExcelExportUtils";
 import { generateAndDownloadWordDocument } from "../WordDocumentGenerator";
+import { generateAndDownloadExcelDocument } from "../ExcelGenerator";
+
 // import { generateWordDocumentFromExcel } from '../WordDocumentGenerator';
+
 import { openDB } from "idb";
 import { CheckBox } from "@mui/icons-material";
 
@@ -47,31 +39,6 @@ export default function ProductList() {
   const [completedStatus, setCompletedStatus] = useState({});
 
   const [offlineData, setOfflineData] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchDataFromIndexedDB = async () => {
-  //     try {
-  //       // Open the IndexedDB database
-  //       const db = await openDB("form-db", 1);
-
-  //       // Access the object store
-  //       const transaction = db.transaction("formData", "readonly");
-  //       const store = transaction.objectStore("formData");
-
-  //       // Retrieve all data from the object store
-  //       const data = await store.getAll();
-
-  //       // Update the component state with the fetched data
-  //       setOfflineData(data);
-  //     } catch (error) {
-  //       console.error("Error fetching data from IndexedDB:", error);
-  //     }
-  //   };
-
-  //   // Call the function when the component mounts
-  //   fetchDataFromIndexedDB();
-  // }, []);
-  
 
   useEffect(() => {
     const fetchDataFromIndexedDB = async () => {
@@ -99,7 +66,6 @@ export default function ProductList() {
       fetchDataFromIndexedDB();
     }
   }, []);
- 
 
   useEffect(() => {
     const dataRef = ref(database, "/UserData");
@@ -124,23 +90,21 @@ export default function ProductList() {
       onValue(dataRef, onDataChange);
     };
   }, []);
-  
 
   const handleExportToExcel = () => {
-    if (rows.length > 0 ) {
-    // Call the utility function to generate and download Excel when clicking the button
-    generateAndDownloadExcel(rows);}
-    else {
+    if (rows.length > 0) {
+      // Call the utility function to generate and download Excel when clicking the button
+      generateAndDownloadExcel(rows);
+    } else {
       Swal.fire("Error", "No data available for download", "error");
     }
   };
- 
 
-  
   const handleDownload = () => {
     const today = new Date();
-  const formattedDate = today.toISOString().split('T')[0];
-    if (rows.length > 0 ) { // Check if rows is not empty and the first row has the 'details' property
+    const formattedDate = today.toISOString().split("T")[0];
+    if (rows.length > 0) {
+      // Check if rows is not empty and the first row has the 'details' property
       let serialCounter = 1; // Initialize the counter outside the loop
 
       // Inside the loop where you generate the data
@@ -149,16 +113,44 @@ export default function ProductList() {
         TOPIC: rows[0].details,
         CAT: rows[0].category,
         ZONE: rows[0].Name,
-        SERIAL: String(serialCounter).padStart(5, '0') // Convert counter to 5-digit string
+        SERIAL: String(serialCounter).padStart(5, "0"), // Convert counter to 5-digit string
       };
-      
+
       serialCounter++;
-  
+
       generateAndDownloadWordDocument(data);
     } else {
       Swal.fire("Error", "No data available for download", "error");
     }
   };
+
+  const handleDownload11 = () => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split("T")[0];
+    if (rows.length > 0) {
+      // Check if rows is not empty and the first row has the 'details' property
+      let serialCounter = 1; // Initialize the counter outside the loop
+
+      // Inside the loop where you generate the data
+      const data = {
+        DATE: formattedDate,
+        TOPIC: rows[0].details,
+        CAT: rows[0].category,
+        ZONE: rows[0].Name,
+        SERIAL: String(serialCounter).padStart(5, "0"), // Convert counter to 5-digit string
+      };
+
+      serialCounter++;
+
+      generateAndDownloadExcelDocument(data);
+    } else {
+      Swal.fire("Error", "No data available for download", "error");
+    }
+  };
+
+ 
+ // Assuming Book1 is the URL or path to your Excel template file
+
 
   const handleChangeStatus = (id) => {
     // Toggle the completion status for the specified id
@@ -289,9 +281,11 @@ export default function ProductList() {
           Export to Excel
         </Button>
         <Button variant="contained" onClick={handleDownload}>
-  Download Word Document
-</Button>
-
+          Word Document
+        </Button>
+        <Button variant="contained" onClick={   handleDownload11 }>
+          Excel Document
+        </Button>
       </Stack>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">

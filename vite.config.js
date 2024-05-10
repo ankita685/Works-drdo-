@@ -1,25 +1,20 @@
 import { defineConfig } from "vite";
 // import react from "@vitejs/plugin-react";
-import ReactRefresh from '@vitejs/plugin-react';
+import ReactRefresh from "@vitejs/plugin-react";
 // Import the html plugin
 
 export default defineConfig({
   build: {
     // Specify the entry file (e.g., src/main.js or src/main.ts)
     rollupOptions: {
-      external: ['bootstrap'],
+      external: ["bootstrap"],
       output: {
-        manualChunks: {
-         
-        },
+        manualChunks: {},
       },
     },
     chunkSizeWarningLimit: 1000,
-
-    
-  
   },
-  assetsInclude: ['**/*.docx'],
+  assetsInclude: ["**/*.docx", "**/*.xlsx"],
   plugins: [
     [ReactRefresh()],
 
